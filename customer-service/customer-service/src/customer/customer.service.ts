@@ -36,6 +36,10 @@ export class CustomerService {
     return customer;
   }
 
+  async findByEmail(email: string): Promise<Customer | null> {
+    return this.customerRepository.findOneBy({ email });
+  }
+
   async update(id: number, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
     await this.customerRepository.update(id, updateCustomerDto);
     const updatedCustomer = await this.findOne(id);

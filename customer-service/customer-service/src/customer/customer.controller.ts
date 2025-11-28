@@ -15,11 +15,22 @@ import { Customer } from './customer.entity';
 
 @Controller('customers')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerService: CustomerService) { }
 
   @Post()
   async create(@Body() createCustomerDto: CreateCustomerDto): Promise<Customer> {
     return this.customerService.create(createCustomerDto);
+  }
+
+  @Post('login')
+  async login(@Body() body: { email: string }): Promise<Customer> {
+    const customer = await this.customerService.findByEmail(body.email);
+    if (!customer) {
+      // Return null or throw a specific error that the frontend can handle gracefully
+      // For this flow, returning null (or 404) tells the frontend to switch to Sign Up
+      throw new Error('Customer not found');
+    }
+    return customer;
   }
 
   @Get()
